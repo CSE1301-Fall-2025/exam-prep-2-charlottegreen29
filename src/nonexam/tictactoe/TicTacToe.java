@@ -18,7 +18,13 @@ public class TicTacToe  {
 	 * @return a 3x3 String[][] array with each element set to a single blank string (" ").
 	 */
 	public static String[][] genBoard() {
-		return null; // FIXME
+		String[][] board = new String[3][3];
+		for (int r=0; r<board.length; r++){
+			for (int c=0; c<board[0].length; c++){
+				board[r][c]=" ";
+			}
+		}
+		return board;
 	}
 
 	/**
@@ -40,7 +46,12 @@ public class TicTacToe  {
 	 * @param row should be between 0 and 2, inclusively
 	 */
 	public static void verifyValidRow(int row) {
-		throw new UnsupportedOperationException("You must implement this method");
+		if (row>=0 && row<=2){
+			return;
+		}
+		else{
+			throw new IllegalArgumentException("Row must be between 0 and 2 but was instead " + row);
+		}
 	}
 
 	/**
@@ -48,7 +59,12 @@ public class TicTacToe  {
 	 * @param col should be between 0 and 2, inclusively
 	 */
 	public static void verifyValidCol(int col) {
-		throw new UnsupportedOperationException("You must implement this method");
+		if (col>=0 && col<=2){
+			return;
+		}
+		else{
+			throw new IllegalArgumentException("Column must be between 0 and 2 but was instead " + col);
+		}
 	}
 
 
@@ -90,9 +106,13 @@ public class TicTacToe  {
 		verifyValidPlayer(player);
 		verifyValidRow(row);
 		verifyValidCol(col);
-		
-		
-		return false; // FIXME
+		if (board[row][col] != " "){
+			return false;
+		}
+		else {
+			board[row][col]=player;
+			return true;
+		}
 	}
 
 	/**
@@ -101,7 +121,15 @@ public class TicTacToe  {
 	 * @return true iff the board is full
 	 */
 	public static boolean boardFull(String[][] board) {
-		return true; // FIXME
+		boolean ans = true;
+		for (int r=0; r<board.length; r++){
+			for (int c=0; c<board[0].length; c++){
+				if (board[r][c] == " "){
+					ans = false;
+				}
+			}
+		}
+		return ans;
 	}
 
 	/**
@@ -111,10 +139,57 @@ public class TicTacToe  {
 	 * @param board A 3x3 String[][] array
 	 * @return true iff the board contains some win for the specified player
 	 */
-	public static boolean winFor(String player, String[][] board) {
-		verifyValidPlayer(player);
-		
-		return true; // FIXME
+	public static boolean winFor(String player, String[][] board) { // I'm gonna make a maxPathLength recursive method and if the max path length is 3, then it will return true.
+		boolean ans = false;
+		for (int r = 0; r<board.length; r++){
+			for (int c = 0; c<board[0].length; c++){
+				if (maxPathLength(player, board, r, c)==3){
+					ans = true;
+				}
+			}
+		}
+		return ans;
+	}
+
+	public static int maxPathLength(String player, String[][] board, int r, int c){
+		if (!board[r][c].equals(player)){
+			return 0;
+		}
+
+		else {
+			board[r][c] = "";
+			int up = 0;
+			if (r>0){
+				up = maxPathLength(player,board,r-1,c);
+			       
+			}
+
+			int down = 0;
+			if (r<board.length-1){
+				down = maxPathLength(player,board,r+1,c);
+			       
+			}
+
+			int left = 0;
+			if (c>0){
+				left = maxPathLength(player,board,r,c-1);
+			       
+			}
+
+			int right = 0;
+			if (c<board[0].length-1){
+				right = maxPathLength(player,board,r,c+1);
+			       
+			}
+
+			board[r][c] = player;
+
+			int upOrDown = Math.max(up, down);
+			int rightOrLeft = Math.max (right, left);
+			return Math.max (upOrDown, rightOrLeft)+1;
+		}
+	
+
 	}
 
 }
