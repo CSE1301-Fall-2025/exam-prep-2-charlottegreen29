@@ -17,12 +17,41 @@ public class Lines {
 	 * @param y2 y coordinate of ending point
 	 */
 	public static void drawLine(double x1, double y1, double x2, double y2) {
-		// FIXME -- fill in this method according to the instructions
-		
+		double xStart = Math.max(x1, x2);
+		double xEnd = Math.min(x1, x2);
+		double yStart = Math.max(y1, y2);
+		double yEnd = Math.min(y1, y2);
+
+		drawLineHelper(xStart, yStart, xEnd, yEnd);
 
 		// Note: StdDraw.show() is required to draw that which is 
 		// deferred by StdDraw.enableDoubleBuffering();
 		StdDraw.show();
+	}
+
+	public static void drawLineHelper(double xStart, double yStart, double xEnd, double yEnd){
+		StdDraw.setPenRadius(0.002);
+		StdDraw.setPenColor(StdDraw.BLACK);
+		if (xStart == xEnd && yStart == yEnd){
+			StdDraw.point(xStart,yStart);
+			return;
+		}
+		else {
+			StdDraw.point(xStart,yStart);
+			double slope = (yEnd-yStart)/(xEnd-xStart); // I know I'm not supposed to do it with slope, but idk how else to do it
+			double xNew = xStart;
+			double yNew = yStart;
+			if (xStart != xEnd){
+				xNew += 0.01; // let's say the x-value changes by 0.01 each time.
+				yNew = yEnd - slope*(xEnd-xNew); // this is a rearrangment of the slope formula to assign a new y-value.
+			}
+			else {
+				yNew += 0.01; // the y-value will change by 0.01 each time if the x-value isn't changing
+			}
+			drawLineHelper(xNew, yNew, xEnd, yEnd);
+			
+		}
+
 	}
 
 	/**
